@@ -26,7 +26,7 @@ async def main():
 
     # Tasks
     tasks = []
-    for account in accounts[-1:]:
+    for account in accounts:
         semaphore = semaphores[account]
 
         available_tasks = [
