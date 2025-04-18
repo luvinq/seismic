@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from src import config
+
 
 @dataclass(frozen=True)
 class Account:
@@ -9,4 +11,13 @@ class Account:
     proxy: Optional[str]
 
     def __str__(self) -> str:
-        return f"Account {self.id}"
+        msg = {
+            "en": {
+                "account": "Account"
+            },
+            "ru": {
+                "account": "Аккаунт"
+            }
+        }[config.LOGS_LANGUAGE]
+
+        return f"{msg['account']} {self.id}"

@@ -4,7 +4,7 @@ from asyncio import Semaphore
 
 from loguru import logger
 
-from src import utils
+from src import utils, config
 from src.model import Account, SeismicChain
 from src.service import Service
 
@@ -15,12 +15,30 @@ ERC20_CONTRACT_BASE_BYTECODE = "0x608060405234801561001057600080fd5b506040516119
 
 class Mintair(Service):
 
+    def __init__(self):
+        Service.__init__(self)
+
+        self.msg = {
+            "en": {
+                "deploy": "Deploy",
+                "deploying": "Deploying",
+                "name": "Name",
+                "symbol": "Symbol"
+            },
+            "ru": {
+                "deploy": "Деплой",
+                "deploying": "Деплой",
+                "name": "Название",
+                "symbol": "Символ"
+            }
+        }[config.LOGS_LANGUAGE]
+
     async def deploy_timer_contract(self, semaphore: Semaphore, account: Account):
-        tag = f"{account} > Mintair > Deploy"
+        tag = f"{account} > Mintair > {self.msg['deploy']}"
         await utils.delay(self._random_delay, tag)
 
         async with utils.web3_session(semaphore, account.proxy, tag) as web3:
-            logger.bind(tag=tag).info(f"Deploying Timer Contract")
+            logger.bind(tag=tag).info(f"{self.msg['deploying']} Timer Contract")
 
             address = web3.eth.account.from_key(account.private_key).address
 
@@ -33,16 +51,16 @@ class Mintair(Service):
             await utils.perform_transaction(web3, tx, account.private_key, tag)
 
     async def deploy_erc20_contract(self, semaphore: Semaphore, account: Account):
-        tag = f"{account} > Mintair > Deploy"
+        tag = f"{account} > Mintair > {self.msg['deploy']}"
         await utils.delay(self._random_delay, tag)
 
         async with utils.web3_session(semaphore, account.proxy, tag) as web3:
             contract_name = self._generate_random_contract_name()
             contract_symbol = contract_name.upper()
 
-            logger.bind(tag=tag).info(f"Deploying ERC20 Contract")
-            logger.bind(tag=tag).info(f"Name: {contract_name}")
-            logger.bind(tag=tag).info(f"Symbol: {contract_symbol}")
+            logger.bind(tag=tag).info(f"{self.msg['deploying']} ERC20 Contract")
+            logger.bind(tag=tag).info(f"{self.msg['name']}: {contract_name}")
+            logger.bind(tag=tag).info(f"{self.msg['symbol']}: {contract_symbol}")
 
             address = web3.eth.account.from_key(account.private_key).address
             data = self._generate_erc20_contract_bytecode(contract_name, contract_symbol)

@@ -1,3 +1,8 @@
+# Logs language
+# English - en
+# Русский - ru
+LOGS_LANGUAGE = "en"
+
 # Minimal amount for one action
 AMOUNT_MIN = 0.000001
 

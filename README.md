@@ -41,6 +41,10 @@ python accounts.py
 2. (Optional) Configure script settings in `src/config.py`
 
 ```python
+LOGS_LANGUAGE = "en"      # Logs language
+                          # English - en
+                          # Русский - ru
+
 AMOUNT_MIN = 0.000001     # Minimal amount for one action
 AMOUNT_MAX = 0.00001      # Maximal amount for one action
 
